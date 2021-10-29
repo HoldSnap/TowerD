@@ -52,9 +52,9 @@ class Game:
 				if event.type == pygame.QUIT:
 					Running=False
 				
-				#if event.type == pygame.MOUSEBUTTONDOWN:  # проверка на нажатие левой кнопки мыши 
-				#	self.clicks.append(currentMousePosition) # даёт координаты 
-				#	print(self.clicks)
+				if event.type == pygame.MOUSEBUTTONDOWN:  # проверка на нажатие левой кнопки мыши 
+					self.clicks.append(currentMousePosition) # даёт координаты 
+					print(self.clicks)
 			
 				
 				if event.type ==pygame.KEYDOWN and event.key ==pygame.K_t : #проверка нажатия клавиши
@@ -73,8 +73,8 @@ class Game:
 	def draw(self):
 		self.gameWindow.blit(self.backgroundImage,(0,0)) #рисует  карту
 	
-		#for click in self.clicks:
-		#	pygame.draw.circle(self.gameWindow, BLUE,(click[0],click[1]), 5 ) #рисует круг 
+		for click in self.clicks:
+			pygame.draw.circle(self.gameWindow, BLUE,(click[0],click[1]), 5 ) #рисует круг 
 
 		
 		for m in self.monsters:
