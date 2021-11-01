@@ -6,6 +6,8 @@ from Init import *
 from Monster import *
 #from FirstTower import *
 from Tower import *
+from ArcherTower import *
+from BombTower import *
 from Music import *
 import time
 import random
@@ -22,10 +24,11 @@ class Game:
 		self.gameWindow = window  #окно игры 
 		self.monsters = [Monster()] #монстры
 		self.towers = [] #башенка 
-		self.numOfActiveMonsters =0
+		self.numOfActiveMonsters = 0
 		self.monsterFrequency = 1
 		self.numOfMonsters = 10
-		self.gameScore = 100
+		self.gameScore = 10
+		self.oldGameScore = 10
 		self.currentTime= time.time()
 		self.activeTowerCheckpoints = []
 		self.backgroundImage = pygame.image.load(BACKGROUND_PATH) # карта
@@ -63,12 +66,19 @@ class Game:
 							self.add_tower('archer_tower',point) #если да то ок
 							self.activeTowerCheckpoints.append(point)
 							break
+
 			for m in self.monsters: # движение монстра 
 				m.move()
 			for t in self.towers:
 				self.monsters = t.attack(self.monsters)
+			
+			self.update_game_score()
+
 			self.draw()
 		pygame.quit()
+
+	def update_game_score(self):
+		pass
 
 	def draw(self):
 		self.gameWindow.blit(self.backgroundImage,(0,0)) #рисует  карту
@@ -92,10 +102,14 @@ class Game:
 
 		
 	def add_tower(self,name, position): #делает башню 	
-		if position not in self.activeTowerCheckpoints and self.gameScore >= TOWER_PRICE:
-			new_tower = Tower(name,position)
+		if (name == 'archer_tower'):
+			new_tower = ArcherTower(name,position)
+		if (name == 'bomb_tower'):
+			new_tower = BombTower(name,position)
+			
+		if position not in self.activeTowerCheckpoints and self.gameScore >= new_tower.score:
 			new_tower.isActive = True
-			self.gameScore -= TOWER_PRICE
+			self.gameScore -= new_tower.score
 			self.towers.append(new_tower)
 	
 	#def main_ost(self): взаимодействие башен и монстров  + меню(начисление очков) 
@@ -111,5 +125,3 @@ class Game:
 		AB=sqrt((A[0]- B[0])**2 + (A[1]-B[1])**2)
 		return AB
 
-g=Game(GAME_SPACE_WINDOW)
-g.run()
