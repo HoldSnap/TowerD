@@ -1,7 +1,6 @@
-from _typeshed import Self
+
 from Tower import *
 import pygame
-
 class ArcherTower(Tower):
     def __init__(self, NAME, POSITION):
         super().__init__(NAME, POSITION)
