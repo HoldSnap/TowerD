@@ -27,7 +27,7 @@ class Game:
 		self.numOfActiveMonsters = 0
 		self.monsterFrequency = 1
 		self.numOfMonsters = 10
-		self.gameScore = 10
+		self.gameScore = 100
 		self.oldGameScore = 10
 		self.currentTime= time.time()
 		self.activeTowerCheckpoints = []
@@ -54,16 +54,23 @@ class Game:
 			for event in pygame.event.get(): # ивент для выхода 
 				if event.type == pygame.QUIT:
 					Running=False
-				
+				"""""
 				if event.type == pygame.MOUSEBUTTONDOWN:  # проверка на нажатие левой кнопки мыши 
 					self.clicks.append(currentMousePosition) # даёт координаты 
 					print(self.clicks)
-			
+			    """""
 				
 				if event.type ==pygame.KEYDOWN and event.key ==pygame.K_t : #проверка нажатия клавиши
 					for point in TOWERS_CHECKPOINTS: #пробегает по всем точкам башни
 						if self.length_between_points(point,currentMousePosition)<TOWER_AREA_RADIUS   : #проверяет входит ли в радиус мышка  #сделать проверку на есть ещё одна башня или нет
 							self.add_tower('archer_tower',point) #если да то ок
+							self.activeTowerCheckpoints.append(point)
+							break
+				
+				if event.type ==pygame.KEYDOWN and event.key ==pygame.K_y : #проверка нажатия клавиши
+					for point in TOWERS_CHECKPOINTS: #пробегает по всем точкам башни
+						if self.length_between_points(point,currentMousePosition)<TOWER_AREA_RADIUS   : #проверяет входит ли в радиус мышка  #сделать проверку на есть ещё одна башня или нет
+							self.add_tower('bomb_tower',point) #если да то ок
 							self.activeTowerCheckpoints.append(point)
 							break
 
