@@ -9,6 +9,7 @@ from Tower import *
 from ArcherTower import *
 from BombTower import *
 from Music import *
+from RockTower import *
 import time
 import random
 
@@ -73,6 +74,13 @@ class Game:
 							self.add_tower('bomb_tower',point) #если да то ок
 							self.activeTowerCheckpoints.append(point)
 							break
+				
+				if event.type ==pygame.KEYDOWN and event.key ==pygame.K_u : #проверка нажатия клавиши
+					for point in TOWERS_CHECKPOINTS: #пробегает по всем точкам башни
+						if self.length_between_points(point,currentMousePosition)<TOWER_AREA_RADIUS   : #проверяет входит ли в радиус мышка  #сделать проверку на есть ещё одна башня или нет
+							self.add_tower('rock_tower',point) #если да то ок
+							self.activeTowerCheckpoints.append(point)
+							break
 
 			for m in self.monsters: # движение монстра 
 				m.move()
@@ -113,6 +121,8 @@ class Game:
 			new_tower = ArcherTower(name,position)
 		if (name == 'bomb_tower'):
 			new_tower = BombTower(name,position)
+		if (name == 'rock_tower'):
+			new_tower = RockTower(name,position)
 			
 		if position not in self.activeTowerCheckpoints and self.gameScore >= new_tower.score:
 			new_tower.isActive = True
