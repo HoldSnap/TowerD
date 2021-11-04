@@ -2,7 +2,6 @@ import pygame
 import sys
 
 
-
 TOWER_PRICE =10
 WIN_WIDTH=1000 #50*32 	
 WIN_HEIGHT=800 # 32*32
