@@ -12,7 +12,7 @@ from Music import *
 from RockTower import *
 import time
 import random
-
+pygame.font.init()
 
 
 
@@ -48,52 +48,58 @@ class Game:
 			currentMousePosition = pygame.mouse.get_pos() # даёт координаты  мышки
 			#Генерируем монстров с частотой monsterFrequency (в сек)
 			self.monsterFrequency =random.randrange(1,10)/5
+				
 			if time.time()-self.currentTime>=self.monsterFrequency and self.numOfActiveMonsters < self.numOfMonsters:
 				self.currentTime=time.time()
 				self.numOfActiveMonsters+=1
 				self.generate_monster()
+
 			for event in pygame.event.get(): # ивент для выхода 
 				if event.type == pygame.QUIT:
 					Running=False
+					
+				keys = pygame.key.get_pressed()
+				if keys[pygame.K_ESCAPE]:
+					self.pause()
 				"""""
 				if event.type == pygame.MOUSEBUTTONDOWN:  # проверка на нажатие левой кнопки мыши 
 					self.clicks.append(currentMousePosition) # даёт координаты 
 					print(self.clicks)
 			    """""
-				
-				if event.type ==pygame.KEYDOWN and event.key ==pygame.K_t : #проверка нажатия клавиши
-					for point in TOWERS_CHECKPOINTS: #пробегает по всем точкам башни
-						if self.length_between_points(point,currentMousePosition)<TOWER_AREA_RADIUS   : #проверяет входит ли в радиус мышка  #сделать проверку на есть ещё одна башня или нет
-							self.add_tower('archer_tower',point) #если да то ок
+				for point in TOWERS_CHECKPOINTS: #пробегает по всем местам где нету или есть башенка
+					if self.length_between_points(point,currentMousePosition)<TOWER_AREA_RADIUS: #проверка попадает ли мышка в область где можно ставить мышку 
+						if event.type ==pygame.KEYDOWN and event.key ==pygame.K_t :  #проверка на нажатие 
+							self.add_tower('archer_tower',point)  #добавление башни 
+							self.activeTowerCheckpoints.append(point)  #делает так чтобы нельзя было паставить башню в это место опять 
+							break #выход 
+
+						if event.type ==pygame.KEYDOWN and event.key ==pygame.K_y :
+							self.add_tower('bomb_tower',point)  
 							self.activeTowerCheckpoints.append(point)
 							break
-				
-				if event.type ==pygame.KEYDOWN and event.key ==pygame.K_y : #проверка нажатия клавиши
-					for point in TOWERS_CHECKPOINTS: #пробегает по всем точкам башни
-						if self.length_between_points(point,currentMousePosition)<TOWER_AREA_RADIUS   : #проверяет входит ли в радиус мышка  #сделать проверку на есть ещё одна башня или нет
-							self.add_tower('bomb_tower',point) #если да то ок
+						
+						if event.type ==pygame.KEYDOWN and event.key ==pygame.K_u :
+							self.add_tower('rock_tower',point) 
 							self.activeTowerCheckpoints.append(point)
 							break
-				
-				if event.type ==pygame.KEYDOWN and event.key ==pygame.K_u : #проверка нажатия клавиши
-					for point in TOWERS_CHECKPOINTS: #пробегает по всем точкам башни
-						if self.length_between_points(point,currentMousePosition)<TOWER_AREA_RADIUS   : #проверяет входит ли в радиус мышка  #сделать проверку на есть ещё одна башня или нет
-							self.add_tower('rock_tower',point) #если да то ок
-							self.activeTowerCheckpoints.append(point)
-							break
+
 
 			for m in self.monsters: # движение монстра 
 				m.move()
 			for t in self.towers:
 				self.monsters = t.attack(self.monsters)
 			
-			self.update_game_score()
+			#self.update_game_score()
 
 			self.draw()
 		pygame.quit()
 
-	def update_game_score(self):
-		pass
+	#def update_game_score(self):
+		#font_name = pygame.font.Font(None, 36)
+		#Score = font_name.render(self.gameScore,True,BLUE)
+		#GAME_SPACE_WINDOW.blit(Score, (10,100))
+		#pygame.display.update()
+
 
 	def draw(self):
 		self.gameWindow.blit(self.backgroundImage,(0,0)) #рисует  карту
@@ -142,3 +148,17 @@ class Game:
 		AB=sqrt((A[0]- B[0])**2 + (A[1]-B[1])**2)
 		return AB
 
+	def pause (self):
+		paused = True
+		while paused :
+			for event in pygame.event.get(): 
+				if event.type == pygame.QUIT:
+					Running=False
+			keys = pygame.key.get_pressed()
+			if keys[pygame.K_RETURN]:
+				paused = False
+			
+
+
+				
+				
