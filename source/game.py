@@ -1,5 +1,6 @@
 import pygame
 import keyboard
+from Scorer import *
 from math import *
 import sys
 from Init import *
@@ -7,7 +8,7 @@ from Monster import *
 #from FirstTower import *
 from Tower import *
 from ArcherTower import *
-from BombTower import *
+from MagicTower import *
 from Music import *
 from RockTower import *
 import time
@@ -26,6 +27,7 @@ class Game:
 		self.monsters = [Monster()] #монстры
 		self.towers = [] #башенка 
 		self.numOfActiveMonsters = 0
+		self.gameScorer =Scorer(100)
 		self.monsterFrequency = 1
 		self.numOfMonsters = 10
 		self.gameScore = 100
@@ -54,6 +56,8 @@ class Game:
 				self.numOfActiveMonsters+=1
 				self.generate_monster()
 
+			prevStepMonsters = self.monsters.copy()
+			prevStepTowers = self.towers.copy()
 			for event in pygame.event.get(): # ивент для выхода 
 				if event.type == pygame.QUIT:
 					Running=False
@@ -68,17 +72,17 @@ class Game:
 			    """""
 				for point in TOWERS_CHECKPOINTS: #пробегает по всем местам где нету или есть башенка
 					if self.length_between_points(point,currentMousePosition)<TOWER_AREA_RADIUS: #проверка попадает ли мышка в область где можно ставить мышку 
-						if event.type ==pygame.KEYDOWN and event.key ==pygame.K_t :  #проверка на нажатие 
+						if event.type ==pygame.KEYDOWN and event.key ==pygame.K_1 :  #проверка на нажатие 
 							self.add_tower('archer_tower',point)  #добавление башни 
 							self.activeTowerCheckpoints.append(point)  #делает так чтобы нельзя было паставить башню в это место опять 
 							break #выход 
 
-						if event.type ==pygame.KEYDOWN and event.key ==pygame.K_y :
-							self.add_tower('bomb_tower',point)  
+						if event.type ==pygame.KEYDOWN and event.key ==pygame.K_2 :
+							self.add_tower('magic_tower',point)  
 							self.activeTowerCheckpoints.append(point)
 							break
 						
-						if event.type ==pygame.KEYDOWN and event.key ==pygame.K_u :
+						if event.type ==pygame.KEYDOWN and event.key ==pygame.K_3 :
 							self.add_tower('rock_tower',point) 
 							self.activeTowerCheckpoints.append(point)
 							break
@@ -88,18 +92,18 @@ class Game:
 				m.move()
 			for t in self.towers:
 				self.monsters = t.attack(self.monsters)
-			
-			#self.update_game_score()
 
+			self.gameScorer.update_score(prevStepMonsters,prevStepTowers,self.monsters,self.towers)
+			for m in self.monsters:
+				if m.winner == True:
+					font_name = pygame.font.SysFont('inkfree', 36)
+					Score = font_name.render('Your Lose' , True , WHITE)
+					self.gameWindow.blit(Score, (WIN_WIDTH//2,WIN_HEIGHT//2))
+					pygame.display.update()
+					self.pause()
+				
 			self.draw()
 		pygame.quit()
-
-	#def update_game_score(self):
-		#font_name = pygame.font.Font(None, 36)
-		#Score = font_name.render(self.gameScore,True,BLUE)
-		#GAME_SPACE_WINDOW.blit(Score, (10,100))
-		#pygame.display.update()
-
 
 	def draw(self):
 		self.gameWindow.blit(self.backgroundImage,(0,0)) #рисует  карту
@@ -113,6 +117,8 @@ class Game:
 		
 		for t in self.towers:
 			t.draw(self.gameWindow)# рисует башню
+		
+		self.gameScorer.draw(self.gameWindow)
 
 		pygame.display.update()
 	def generate_monster(self):
@@ -125,14 +131,14 @@ class Game:
 	def add_tower(self,name, position): #делает башню 	
 		if (name == 'archer_tower'):
 			new_tower = ArcherTower(name,position)
-		if (name == 'bomb_tower'):
-			new_tower = BombTower(name,position)
+		if (name == 'magic_tower'):
+			new_tower = MagicTower(name,position)
 		if (name == 'rock_tower'):
 			new_tower = RockTower(name,position)
 			
-		if position not in self.activeTowerCheckpoints and self.gameScore >= new_tower.score:
+		if position not in self.activeTowerCheckpoints and self.gameScorer.currentScore >= new_tower.score:
 			new_tower.isActive = True
-			self.gameScore -= new_tower.score
+			self.gameScorer.currentScore -= new_tower.score
 			self.towers.append(new_tower)
 	
 	#def main_ost(self): взаимодействие башен и монстров  + меню(начисление очков) 

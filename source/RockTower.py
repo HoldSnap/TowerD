@@ -7,5 +7,5 @@ class RockTower(Tower):
         self.damagePower = 0.05
         self.damageArea = 150
         self.img = pygame.image.load(ROCK_TOWER_PATH)
-        self.score = 10 
+        self.score = 50
         self.name = NAME

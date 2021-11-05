@@ -10,10 +10,11 @@ class Monster:
         self.curr_checkpoint=0
         self.speed=3# 0->1
         self.health = 1
+        self.price = 10
         self.maxHealth = 100
         self.road = ROAD_CHECKPOINTS 
         self.img = pygame.image.load(DEFAULT_MONSTER_PATH) #картинка олега
-
+        self.winner = False
     def draw(self,window):
         #ОТРИСОВКА
         window.blit(self.img,(self.x, self.y)) 
@@ -42,9 +43,11 @@ class Monster:
                     self.curr_checkpoint+=1
 
         if self.curr_checkpoint >= len(self.road)-1: #18-21 делаем круг 
-            self.x = self.road[0][0]
-            self.y = self.road[0][1]
-            self.curr_checkpoint = 0
+           # self.x = self.road[0][0]
+           # self.y = self.road[0][1]
+           # self.curr_checkpoint = 0
+            self.winner = True
+
      
 
     def hit(self,damage):

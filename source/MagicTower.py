@@ -1,7 +1,7 @@
 from Tower import *
 import pygame
 
-class BombTower(Tower):
+class MagicTower(Tower):
     def __init__(self, NAME, POSITION):
         super().__init__(NAME, POSITION)
         self.damagePower = 0.005

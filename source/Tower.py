@@ -22,9 +22,6 @@ class Tower:
             if distance < self.damageArea:
                 if monster.hit(self.damagePower):
                     monsters.remove(monster)
-                    self.update_score(10)
                 break
 
         return monsters
-    def update_score (self, updateValue):
-        self.score += updateValue
