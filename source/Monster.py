@@ -2,6 +2,7 @@ import math
 import pygame
 import sys
 from Init import *
+from game import *
 
 class Monster:
     def __init__(self) :
@@ -10,14 +11,23 @@ class Monster:
         self.curr_checkpoint=0
         self.speed=3# 0->1
         self.health = 1
+        self.DeathMonster = 0
+        self.NastDeath = 0
         self.price = 10
-        self.maxHealth = 100
+        self.maxHealth = 1
         self.road = ROAD_CHECKPOINTS 
         self.img = pygame.image.load(DEFAULT_MONSTER_PATH) #картинка олега
         self.winner = False
     def draw(self,window):
         #ОТРИСОВКА
-        window.blit(self.img,(self.x, self.y)) 
+        barLength = 40 # общий размер прямоугольника, в котором отражаем уровень жизни
+        part = float(barLength/self.maxHealth)
+        healthBarLength = round( self.health * part) # Длина уровня жизни в пикселях
+        
+        window.blit(self.img,(self.x, self.y))
+
+        pygame.draw.rect(window,RED,(self.x-20,self.y-50,barLength,10))
+        pygame.draw.rect(window,GREEN,(self.x-20,self.y-50,healthBarLength,10))
     def move(self):
         nextCheckpoint_x = self.road[self.curr_checkpoint+1][0]
         nextCheckpoint_y = self.road[self.curr_checkpoint+1][1]
@@ -50,7 +60,7 @@ class Monster:
 
      
 
-    def hit(self,damage):
+    def hit(self,damage):    
         self.health -= damage
         if self.health <= 0:
             return True
