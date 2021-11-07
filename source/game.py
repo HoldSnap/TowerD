@@ -26,7 +26,7 @@ class Game:
 		self.gameWindow = window  #окно игры 
 		self.monsters = [Monster()] #монстры
 		self.towers = [] #башенка 
-		self.numOfActiveMonsters = 0
+		self.numOfActiveMonsters = 1
 		self.gameScorer =Scorer(100)
 		self.monsterFrequency = 1
 		self.numOfMonsters = 10
@@ -55,6 +55,7 @@ class Game:
 				self.currentTime=time.time()
 				self.numOfActiveMonsters+=1
 				self.generate_monster()
+				print(self.numOfActiveMonsters)
 
 			prevStepMonsters = self.monsters.copy()
 			prevStepTowers = self.towers.copy()
@@ -94,22 +95,16 @@ class Game:
 				self.monsters = t.attack(self.monsters)
 
 			self.gameScorer.update_score(prevStepMonsters,prevStepTowers,self.monsters,self.towers)
-			for m in self.monsters:
-				if m.winner == True:
-					font_name = pygame.font.SysFont('inkfree', 36)
-					Score = font_name.render('Your Lose' , True , WHITE)
-					self.gameWindow.blit(Score, (WIN_WIDTH//2,WIN_HEIGHT//2))
-					pygame.display.update()
-					self.pause()
-				
+			
+			self.end_game_check()
 			self.draw()
 		pygame.quit()
 
 	def draw(self):
 		self.gameWindow.blit(self.backgroundImage,(0,0)) #рисует  карту
 	
-		for click in self.clicks:
-			pygame.draw.circle(self.gameWindow, BLUE,(click[0],click[1]), 5 ) #рисует круг 
+		#for click in self.clicks:
+		#	pygame.draw.circle(self.gameWindow, BLUE,(click[0],click[1]), 5 ) #рисует круг 
 
 		
 		for m in self.monsters:
@@ -124,6 +119,7 @@ class Game:
 	def generate_monster(self):
 		newMonster= Monster()
 		self.monsters.append(newMonster)
+
 	
 	
 
@@ -138,13 +134,27 @@ class Game:
 			
 		if position not in self.activeTowerCheckpoints and self.gameScorer.currentScore >= new_tower.score:
 			new_tower.isActive = True
-			self.gameScorer.currentScore -= new_tower.score
+			#self.gameScorer.currentScore -= new_tower.score
 			self.towers.append(new_tower)
 	
 	#def main_ost(self): взаимодействие башен и монстров  + меню(начисление очков) 
 	#	MAIN_OST
 			
-			
+	def end_game_check(self):
+		if len(self.monsters) == 0:
+			font_name = pygame.font.SysFont('inkfree', 36)
+			Score = font_name.render('Your Win' , True , WHITE)
+			self.gameWindow.blit(Score, (WIN_WIDTH//2,WIN_HEIGHT//2))
+			pygame.display.update()
+			self.pause()
+		for m in self.monsters:
+			if m.winner == True:
+				font_name = pygame.font.SysFont('inkfree', 36)
+				Score = font_name.render('Your Lose' , True , WHITE)
+				self.gameWindow.blit(Score, (WIN_WIDTH//2,WIN_HEIGHT//2))
+				pygame.display.update()
+				self.pause()
+
 			
 
 		
