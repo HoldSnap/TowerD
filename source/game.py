@@ -55,7 +55,6 @@ class Game:
 				self.currentTime=time.time()
 				self.numOfActiveMonsters+=1
 				self.generate_monster()
-				print(self.numOfActiveMonsters)
 
 			prevStepMonsters = self.monsters.copy()
 			prevStepTowers = self.towers.copy()
@@ -66,11 +65,11 @@ class Game:
 				keys = pygame.key.get_pressed()
 				if keys[pygame.K_ESCAPE]:
 					self.pause()
-				"""""
+			
 				if event.type == pygame.MOUSEBUTTONDOWN:  # проверка на нажатие левой кнопки мыши 
 					self.clicks.append(currentMousePosition) # даёт координаты 
 					print(self.clicks)
-			    """""
+		
 				for point in TOWERS_CHECKPOINTS: #пробегает по всем местам где нету или есть башенка
 					if self.length_between_points(point,currentMousePosition)<TOWER_AREA_RADIUS: #проверка попадает ли мышка в область где можно ставить мышку 
 						if event.type ==pygame.KEYDOWN and event.key ==pygame.K_1 :  #проверка на нажатие 
@@ -103,8 +102,8 @@ class Game:
 	def draw(self):
 		self.gameWindow.blit(self.backgroundImage,(0,0)) #рисует  карту
 	
-		#for click in self.clicks:
-		#	pygame.draw.circle(self.gameWindow, BLUE,(click[0],click[1]), 5 ) #рисует круг 
+		for click in self.clicks:
+			pygame.draw.circle(self.gameWindow, BLUE,(click[0],click[1]), 5 ) #рисует круг 
 
 		
 		for m in self.monsters:
@@ -146,7 +145,9 @@ class Game:
 			Score = font_name.render('Your Win' , True , WHITE)
 			self.gameWindow.blit(Score, (WIN_WIDTH//2,WIN_HEIGHT//2))
 			pygame.display.update()
-			self.pause()
+			time.sleep(4)
+			pygame.quit()
+			
 		for m in self.monsters:
 			if m.winner == True:
 				font_name = pygame.font.SysFont('inkfree', 36)
@@ -154,6 +155,7 @@ class Game:
 				self.gameWindow.blit(Score, (WIN_WIDTH//2,WIN_HEIGHT//2))
 				pygame.display.update()
 				self.pause()
+
 
 			
 
