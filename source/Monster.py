@@ -20,7 +20,7 @@ class Monster:
         self.winner = False
     def draw(self,window):
         #ОТРИСОВКА
-        barLength = 40 # общий размер прямоугольника, в котором отражаем уровень жизни
+        barLength = 35 # общий размер прямоугольника, в котором отражаем уровень жизни
         part = float(barLength/self.maxHealth)
         healthBarLength = round( self.health * part) # Длина уровня жизни в пикселях
         
